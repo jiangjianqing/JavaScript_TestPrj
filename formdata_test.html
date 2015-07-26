@@ -1,0 +1,52 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>websocket测试</title>
+    <meta charset="UTF-8">
+    <meta http-equiv="pragma" content="no-cache">
+    <meta http-equiv="Cache-Control" content="no-cache, must-revalidate">
+    <meta http-equiv="expires" content="0">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+
+    <script src="js/jquery.js"></script>
+    <script type="module"></script>
+    <script>
+        jQuery(document).ready(function($){
+
+
+
+            $("form#data").submit(function(event){
+                //grab all form data
+                var formData = new FormData($(this)[0]);
+                $.ajax({
+                    url: 'http://192.168.3.141:8181/cxf/file/upload',
+                    type: 'POST',
+                    data: formData,
+                    async: false,
+                    cache: false,
+                    contentType: false,
+                    dataType:'text',
+                    processData: false,
+                    success: function (returndata) {
+                        alert(returndata);
+                    }
+                });
+                return false;
+            });
+        });
+
+    </script>
+</head>
+<body>
+
+
+    <form id="data" action="" method="post" enctype="multipart/form-data" >
+        <p>id:<input type="text" name="id" placeholder="id"/></p>
+        <p>name:<input type="text" name="name" placeholder="name"/></p>
+        <p>image:<input type="file" name="file"/>
+        <p><input type="submit" value="sub"/></p>
+    </form>
+    <progress id="uploadprogress" min="0" max="100" value="59">0</progress>
+</body>
+</html>

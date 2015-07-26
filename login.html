@@ -1,0 +1,117 @@
+<!DOCTYPE html>
+<html>
+<head lang="en">
+    <meta charset="UTF-8">
+    <title>快速开发平台3.0</title>
+    <link href="css/base.css" rel="stylesheet" type="text/css">
+    <link href="css/login_style.css" rel="stylesheet" type="text/css">
+    <script src="js/jquery.js"></script>
+    <script src="js/jquery.validate.min.js"></script>
+    <script>
+        $(document).ready(function() {
+
+            var validator = $("#signupform").validate({
+                rules: {
+                    username: {
+                        required: true,
+                        minlength: 2
+                    },
+                    password: {
+                        required: true,
+                        minlength: 5
+                    }
+                },
+                messages: {
+                    username: {
+                        required: "请输入用户名",
+                        minlength: jQuery.validator.format("请输入至少 {0} 个字符")
+                    },
+                    password: {
+                        required: "请输入密码",
+                        minlength: jQuery.validator.format("请输入至少 {0} 个字符")
+                    }
+                },
+                // the errorPlacement has to take the table layout into account
+                errorPlacement: function(error, element) {
+                    if (element.is(":radio"))
+                        error.appendTo(element.parent().next().next());
+                    else if (element.is(":checkbox"))
+                        error.appendTo(element.next());
+                    else
+                        error.appendTo(element.parent().next());
+                },
+                // specifying a submitHandler prevents the default submit, good for the demo
+                submitHandler: function() {
+                    alert("submitted!");
+                },
+                // set this class to error-labels to indicate valid fields
+                success: function(label) {
+                    // set &nbsp; as text for IE
+                    label.html("&nbsp;").addClass("checked");
+                },
+                highlight: function(element, errorClass) {
+                    $(element).parent().next().find("." + errorClass).removeClass("checked");
+                }
+            });
+
+        });
+
+    </script>
+</head>
+<body>
+    <div class="Wrap">
+        <div class="Logo fl">
+            <h1><a href="http://www.focusight.net/" title="印刷质量检测|印刷检品机|印刷品检机 - 征图新视科技有限公司"></a></h1>
+        </div>
+
+        <div class="Slogen">
+            <span><a href="#">语言切换</a></span>
+            <p>机器视觉+自动化整体解决方案</p>
+        </div>
+        <div class="cb"></div>
+        <div id="signupbox">
+            <div id="signuptab">
+                <ul>
+                    <li id="signupcurrent">提示：请输入已注册的用户名和密码</li>
+                </ul>
+            </div>
+            <div id="signupwrap">
+                <form action="" method="get" autocomplete="off" id="signupform" novalidate="novalidate">
+                    <table>
+                        <tbody>
+                        <tr>
+                            <td class="Label">
+                                <label for="username" id="lusername">用户名</label>
+                            </td>
+                            <td class="field">
+                                <input type="text" maxlength="50" value="" name="username" id="username">
+                            </td>
+                            <td class="status"></td>
+                        </tr>
+                        <tr>
+                            <td class="Label">
+                                <label for="password" id="lpassword">密码</label>
+                            </td>
+                            <td class="field">
+                                <input type="password" value="" maxlength="50" name="password" id="password">
+                            </td>
+                            <td class="status"></td>
+                        </tr>
+
+                        <tr>
+                            <td class="Label">
+                                <label for="signupsubmit" id="lsignupsubmit"></label>
+                            </td>
+                            <td  class="field">
+                                <input type="submit" value="登录" name="signup" id="signupsubmit">
+                            </td>
+                        </tr>
+                        </tbody></table>
+                </form>
+            </div>
+        </div>
+
+    </div>
+
+</body>
+</html>

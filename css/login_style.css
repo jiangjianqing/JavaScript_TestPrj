@@ -1,0 +1,72 @@
+body {font-size:12px; color:#333; font-family:Verdana}
+input,textarea,select {font-size:12px; color:#000; font-family:Verdana; border:#ddd 1px solid; padding:5px; width:200px}
+h1,h2,h3,h4,h5,h6,button {font-weight:bold; font-family:"微软雅黑"}
+a {color:#333; text-decoration:none}
+a:hover {color:#156fb8}
+
+.Wrap {position: absolute;
+    width: 600px;
+    height: 230px;
+    left: 50%;
+    top: 50%;
+    margin-left: -300px;
+    margin-top: -200px;
+    border: 1px solid #afbeff;
+    padding: 50px;
+}
+.Logo h1 a {display:block; background:url(../image/logo.jpg) no-repeat; width:230px; height:80px}
+.Slogen {float:right; text-align:right; font-family:"微软雅黑"; font-size:16px; color:#333; margin-top:10px; letter-spacing:2px}
+.Slogen span {font-size:12px; display:block; letter-spacing:0px; font-family:Verdana; padding-bottom:5px}
+.Label,.Label label {width: 180px;text-align: center;}
+
+
+#signupbox {
+    margin: 0 auto;
+    text-align: center;
+    width: 100%;
+}
+
+
+#signuptab {
+    float: left;
+    color: #afbeff;
+    font-size: 1em;
+    line-height: normal;
+    width: 100%;
+}
+
+#signupwrap {
+    -moz-border-bottom-colors: none;
+    -moz-border-left-colors: none;
+    -moz-border-right-colors: none;
+    -moz-border-top-colors: none;
+    border-color:  #cacaca;
+    border-image: none;
+    border-style: solid none none;
+    /*
+    border-color: -moz-use-text-color #cacaca #cacaca;
+    border-style: none solid solid;
+
+    border-width: 0 1px 1px;
+    */
+    border-width: 1px 1px;
+    clear: both;
+    padding: 35px 10px 20px 30px;
+    text-align: left;
+}
+
+#signuptab #signupcurrent {
+    background-position: 0 -150px;
+    border-width: 0;
+}
+
+#signupform label.error {
+    background: rgba(0, 0, 0, 0) url("../image/unchecked.gif") no-repeat scroll 0 0;
+    color: #ea5200;
+    font-weight: bold;
+    padding-bottom: 2px;
+    padding-left: 16px;
+}
+#signupform label.checked {
+    background: rgba(0, 0, 0, 0) url("../image/checked.gif") no-repeat scroll 0 0;
+}

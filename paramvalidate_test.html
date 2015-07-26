@@ -1,0 +1,369 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="pragma" content="no-cache">
+    <meta http-equiv="Cache-Control" content="no-cache, must-revalidate">
+    <meta http-equiv="expires" content="0">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+
+    <link id="theme" href="css/themes/smoothness/jquery-ui.css" rel="stylesheet" type="text/css">
+
+    <link href="css/themes/ui.jqgrid.css" rel="stylesheet" type="text/css">
+    <link href="css/themes/jquery-layout-default.css" rel="stylesheet" type="text/css">
+
+
+    <script src="js/jquery.js"></script>
+    <script src="js/jquery-ui.js"></script>
+    <script src="js/jquery.layout-latest.js"></script>
+    <!--
+    <script src="js/jquery.layout.resizePaneAccordions-latest.js"></script>
+    -->
+    <script src="js/i18n/grid.locale-cn.js"></script>
+    <script src="js/jquery.jqGrid.js"></script>
+    <script src="js/debug.min.js"></script>
+    <script src="js/jquery.jsonform.js"></script>
+    <script src="js/jquery.themehelper.js"></script>
+    <script src="js/jquery.mockjax.js"></script>
+
+    <style>
+        /*
+        div#users-contain { width: 350px; margin: 20px 0; }
+        div#users-contain table { margin: 1em 0; border-collapse: collapse; width: 100%; }
+        div#users-contain table td, div#users-contain table th { border: 1px solid #eee; padding: .6em 10px; text-align: left; }
+        .ui-dialog .ui-state-error { padding: .3em; }
+        .validateTips { border: 1px solid transparent; padding: 0.3em; }
+        */
+    </style>
+
+    <title>参数校验测试页面</title>
+    <script>
+
+        $.mockjax({
+            url: "server.php?q=2",
+            dataType: "json",
+            response: function (settings) {
+                this.responseText = JSON.stringify(
+                        {
+                            "page":"1","total":2,"records":"13",
+                            "rows":[
+                                {"id":"13","cell":["13","2007-10-06","Client 3","1000.00","0.00","1000.00",null]},
+                                {"id":"12","cell":["12","2007-10-06","Client 2","700.00","140.00","840.00",null]},
+                                {"id":"11","cell":["11","2007-10-06","Client 1","600.00","120.00","720.00",null]},
+                                {"id":"10","cell":["10","2007-10-06","Client 2","100.00","20.00","120.00",null]},
+                                {"id":"9","cell":["9","2007-10-06","Client 1","200.00","40.00","240.00",null]},
+                                {"id":"8","cell":["8","2007-10-06","Client 3","200.00","0.00","200.00",null]},
+                                {"id":"7","cell":["7","2007-10-05","Client 2","120.00","12.00","134.00",null]},
+                                {"id":"6","cell":["6","2007-10-05","Client 1","50.00","10.00","60.00",""]},
+                                {"id":"5","cell":["5","2007-10-05","Client 3","100.00","0.00","100.00","no tax at all"]},
+                                {"id":"4","cell":["4","2007-10-04","Client 3","150.00","0.00","150.00","no tax"]}
+                            ],
+                            "userdata":{"amount":3220,"tax":342,"total":3564,"name":"Totals:"}
+                        }
+
+                );
+            }
+        });
+
+        $.jgrid.no_legacy_api = true;
+        $.jgrid.useJSON = true;
+
+        jQuery(document).ready(function ($) {
+            $("#theme_changer").Themehelper();
+            $('body').layout({
+                resizerClass: 'ui-state-default',
+                west__size: 300
+                , east__size: 300
+                // RESIZE Accordion widget when panes resize
+                , west__onresize: $.layout.callbacks.resizePaneAccordions
+                , east__onresize: function (pane, $Pane) {
+                    jQuery("#list5").jqGrid('setGridWidth', $Pane.innerWidth() - 20);
+                }
+
+            });
+            $('#dialog').dialog({
+                autoOpen: false,
+                //resizable: false,
+                //height:140,
+                modal: true,
+                buttons: {
+                    "确定": function () {
+                        $(this).dialog('close');
+                        var obj = $.jsonform.getJson($('#testForm'));
+                        debug.warn(obj);
+                    },
+                    "取消": function () {
+                        $(this).dialog('close');
+                    }
+                }
+            });
+            $('#accordion1').accordion({
+                heightStyle: "fill"
+            });
+
+            $('#opendialog').button().on('click', function () {
+                var customform = '  <form id="testForm">' +
+                        '<fieldset>' +
+                        '<label for="name">Name</label>' +
+                        '<input type="text" name="name" id="name" value="Jane Smith" class="text ui-widget-content ui-corner-all">' +
+                        '<label for="email">Email</label>' +
+                        '<input type="text" name="email" id="email" value="jane@smith.com" class="text ui-widget-content ui-corner-all">' +
+                        '<label for="password">Password</label>' +
+                        '<input type="password" name="password" id="password" value="xxxxxxx" class="text ui-widget-content ui-corner-all">' +
+                        '<input type="submit" tabindex="-1" style="position:absolute; top:-1000px">' +
+                        '</fieldset>' +
+                        '</form>';
+                $('#dialog').empty().append($(customform));
+                $('#dialog').dialog('open');
+            });
+
+            $('#uploadflow').button().on('click',function(){
+                var flow_str ='  <form id="testForm">' +
+                        '<fieldset>' +
+                        '<label for="name">Name</label>' +
+                        '<input type="text" name="name" id="name" value="Jane Smith" class="text ui-widget-content ui-corner-all">' +
+                        '<label for="email">Email</label>' +
+                        '<input type="text" name="email" id="email" value="jane@smith.com" class="text ui-widget-content ui-corner-all">' +
+                        '<label for="password">Password</label>' +
+                        '<input type="password" name="password" id="password" value="xxxxxxx" class="text ui-widget-content ui-corner-all">' +
+                        '<input type="submit" tabindex="-1" style="position:absolute; top:-1000px">' +
+                        '</fieldset>' +
+                        '</form>';
+                var samplejson={
+                    Flow:{
+                        name:"js代码上传的xml数据 ",
+                        content:flow_str
+                    }
+                };
+                //alert(JSON.stringify(samplejson));
+                $.ajax({
+                    url:'http://192.168.2.7:8181/cxf/flow/add',
+                    type:'POST',
+                    dataType:'text',
+                    contentType:'application/json',
+                    data:JSON.stringify(samplejson),
+                    success:function(data){
+                        alert(data);
+                    }
+                    ,beforeSend: function(xhr) {
+                        //xhr.setRequestHeader("User-Agent", "uTorrent");
+                    }
+                    ,error: function (xhr, desc, err) {
+                        console.log(xhr);
+                        console.log("Desc: " + desc + "\nErr:" + err);
+                    }
+                });
+            });
+
+            $('#getflow').button().on('click',function(){
+                $.ajax({
+                    url: "http://192.168.2.7:8181/cxf/flow/last",
+                    type:'GET',
+                    dataType: "json",
+                    data: "",
+                    beforeSend: function(x) {
+                        x.setRequestHeader("Content-Type", "application/json; charset=utf-8");
+                    },
+                    success: function(json) {
+                        alert('success!!Flow.content='+json.Flow.content);
+                    },
+                    error: function(x, e) {
+                        //alert(x.responseText);
+                        alert('error:'+e)
+                    },
+                    complete: function(x) {
+                        alert("complete!!responseText="+x.responseText);
+                        //alert('complete:'+x);
+                    }
+                });
+            });
+
+            var t='';
+            $('#getflowresult').button().on('click',function(){
+                $.ajax({
+                    url: "http://192.168.2.7:8181/cxf/flowresult/last",
+                    type:'GET',
+                    dataType: "json",
+                    data: "",
+                    async: false,
+                    beforeSend: function(x) {
+                        //x.setRequestHeader("Content-Type", "application/json; charset=utf-8");
+                    },
+                    success: function(json) {
+                        t=json.Flowresult.content;
+                    },
+                    error: function(x, e) {
+                        //alert(x.responseText);
+                        alert('error:'+e)
+                    },
+                    complete: function(x) {
+                        //alert("complete!!responseText="+x.responseText);
+                        //alert('complete:'+x);
+                    }
+                });
+                alert(t);
+            });
+
+            $('#radioset').buttonset();
+            $(document).tooltip();
+
+            jQuery("#list5").jqGrid({
+                url: 'server.php?q=2',
+                datatype: "json",
+                colNames: ['Inv No', 'Date', 'Client', 'Amount', 'Tax', 'Total', 'Notes'],
+                colModel: [{name: 'id', index: 'id', width: 60, sorttype: "int"}, {
+                    name: 'invdate',
+                    index: 'invdate',
+                    width: 90,
+                    sorttype: "date"
+                }, {name: 'name', index: 'name', width: 100}, {
+                    name: 'amount',
+                    index: 'amount',
+                    width: 80,
+                    align: "right",
+                    sorttype: "float"
+                }, {name: 'tax', index: 'tax', width: 80, align: "right", sorttype: "float"}, {
+                    name: 'total',
+                    index: 'total',
+                    width: 80,
+                    align: "right",
+                    sorttype: "float"
+                }, {name: 'note', index: 'note', width: 150, sortable: false}],
+                rowNum: 10,
+                rowList: [10, 20, 30],
+                pager: '#pager5',
+                sortname: 'id',
+                viewrecords: true,
+                sortorder: "desc",
+                regional : 'cn',
+                caption: "JSON Example"
+
+            });
+            jQuery("#list5").jqGrid('navGrid', '#pager5', {edit: false, add: false, del: false});
+
+        });
+    </script>
+
+</head>
+<body>
+<div class="ui-layout-center">
+    Center<br><br>
+    <button id="opendialog">OpenDialog</button>
+    <br><br>
+
+    <button id="uploadflow">上传流程图</button>
+    <button id="getflow">获取流程图</button>
+    <button id="getflowresult">获取流程执行结果</button>
+    <br><br>
+
+    <div id="dialog" title="Basic dialog">
+        <p><span class="ui-icon ui-icon-alert" style="float:left; margin:0 7px 20px 0;"></span>测试窗口，这里需要自动生成窗体内容并校验</p>
+    </div>
+    <table id="users" class="ui-widget ui-widget-content">
+        <thead>
+        <tr class="ui-widget-header ">
+            <th>Name</th>
+            <th>Email</th>
+            <th>Password</th>
+        </tr>
+        </thead>
+        <tbody>
+        <tr>
+            <td>John Doe</td>
+            <td>john.doe@example.com</td>
+            <td>johndoe1</td>
+        </tr>
+        </tbody>
+    </table>
+
+    <div id="radioset">
+        <input type="radio" id="radio1" name="radio"><label for="radio1">Choice 1</label>
+        <input type="radio" id="radio2" name="radio" checked="checked"><label for="radio2">Choice 2</label>
+        <input type="radio" id="radio3" name="radio"><label for="radio3">Choice 3</label>
+    </div>
+
+
+</div>
+<div class="ui-layout-north">选择主题
+    <select id="theme_changer" title="当前主题"></select>
+</div>
+<div class="ui-layout-south">South
+    <form action="http://192.168.3.141:8181/cxf/file/upload" method="post" enctype="multipart/form-data" >
+        <p>id:<input type="text" name="id"/></p>
+        <p>name:<input type="text" name="name"/></p>
+        <p>image:<input type="file" name="file"/>
+        <p><input type="submit" value="sub"/></p>
+    </form>
+
+    <br><br>
+    <form action="http://192.168.3.141:8181/cxf/file/multiupload" method="post" enctype="multipart/form-data" >
+        <p>id:<input type="text" name="id"/></p>
+        <p>name:<input type="text" name="name"/></p>
+        <p>image:<input type="file" name="file"/></p>
+        <p>image2:<input type="file" name="file2"/></p>
+        <p>file3:<input type="file" name="file3"/></p>
+        <p><input type="submit" value="sub"/></p>
+    </form>
+</div>
+<div class="ui-layout-east">East<br>
+    <table id="list5"></table>
+    <div id="pager5"></div>
+</div>
+<div class="ui-layout-west">
+    <div id="accordion1" class="basic">
+        <h3><a href="#">Section 1</a></h3>
+
+        <div>
+            <h5>West Pane</h5>
+
+            <p>Mauris mauris ante, blandit et, ultrices a, suscipit eget, quam.
+                Integer ut neque. Vivamus nisi metus, molestie vel, gravida in, condimentum sit amet, nunc.</p>
+
+            <p>Nam a nibh. Donec suscipit eros. Nam mi. Proin viverra leo ut odio. Curabitur malesuada.
+                Vestibulum a velit eu ante scelerisque vulputate.</p>
+        </div>
+
+        <h3><a href="#">Section 2</a></h3>
+
+        <div>
+            <h5>Sed Non Urna</h5>
+
+            <p>Donec et ante. Phasellus eu ligula. Vestibulum sit amet purus.
+                Vivamus hendrerit, dolor at aliquet laoreet, mauris turpis porttitor velit,
+                faucibus interdum tellus libero ac justo.</p>
+
+            <p>Vivamus non quam. In suscipit faucibus urna.</p>
+        </div>
+
+        <h3><a href="#">Section 3</a></h3>
+
+        <div>
+            <p>Nam enim risus, molestie et, porta ac, aliquam ac, risus. Quisque lobortis.
+                Phasellus pellentesque purus in massa. Aenean in pede.</p>
+
+            <p>Phasellus ac libero ac tellus pellentesque semper. Sed ac felis. Sed commodo,
+                magna quis lacinia ornare, quam ante aliquam nisi, eu iaculis leo purus venenatis dui.</p>
+            <ul>
+                <li>List item one</li>
+                <li>List item two</li>
+                <li>List item three</li>
+            </ul>
+        </div>
+
+        <h3><a href="#">Section 4</a></h3>
+
+        <div>
+            <p>Cras dictum. Pellentesque habitant morbi tristique senectus et netus et malesuada fames
+                ac turpis egestas.</p>
+
+            <p>Vestibulum ante ipsum primis in faucibus orci luctus et ultrices posuere cubilia Curae;
+                Aenean lacinia mauris vel est.</p>
+
+            <p>Suspendisse eu nisl. Nullam ut libero. Integer dignissim consequat lectus.
+                Class aptent taciti sociosqu ad litora torquent per conubia nostra, per inceptos himenaeos.</p>
+        </div>
+
+    </div>
+</div>
+</body>
+</html>

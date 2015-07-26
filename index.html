@@ -1,0 +1,237 @@
+<!DOCTYPE html>
+<html>
+<head lang="en">
+    <meta charset="UTF-8">
+    <link href="css/themes/smoothness/jquery-ui.css" rel="stylesheet" type="text/css">
+    <script src="js/jquery.js"></script>
+    <script src="js/jquery-ui.js"></script>
+    <script src="js/jquery.layout-latest.js"></script>
+    <script src="js/debug.min.js"></script>
+    <script src="js/jquery.jsonform.js"></script>
+    <script>
+        var testStr = "this is a window`object message!";
+        var formInputStr = ""
+        $(document).ready(function () {
+            $( "button" ).button();
+
+            $( "#accordion" ).accordion({
+                collapsible: true
+            });
+
+            $( "#menu_ul").menu();
+            $("#date1").datepicker({
+                dateFormat: 'mm/dd/yy',
+                changeMonth: true,
+                changeYear: true
+            });
+
+            $("#date2").datepicker({
+                dateFormat: 'mm/dd/yy',
+                changeMonth: true,
+                changeYear: true
+            });
+
+            $("body").layout({applyDemoStyles: true});
+            $('#testButton1').on('click', function () {
+                alert(window["testStr"]);
+                alert($("#testForm").serialize());
+                var jsonObj = $("#testForm").serializeArray();
+                alert(JSON.stringify(jsonObj));
+            });
+            $('#btnExample1').on('click', function () {
+                $testresult = $('#testresult');
+                $testresult.empty();
+                $('#form1 input[name]').each(function () {
+                    var $this = $(this);
+
+                    var re = /\[[0-9]+\]/i;
+                    var name = $this.attr('name');
+                    var $newresult = $(document.createElement('li'));
+                    var resultStr = 'input name=' + name;
+                    if (name.match(re)) {
+                        resultStr += ',属性=数组元素'
+                    }
+                    $testresult.append($newresult.text(resultStr));
+
+                });
+                //debug.error($('#form1').prop("tagName"));
+                $.jsonform.fill({}, $('#form1'));
+                return false;
+            });
+
+            var tempUser = {
+                username: 'abc',
+                password: '123456',
+                gender: 'M',
+                sex: 'm',
+                rules: [
+                    {id: 1, name: 'Admin'},
+                    {id: 3, name: 'Developer'}
+                ]
+            };
+
+            $('#jsonform_submit').on('click', function () {
+                $.jsonform.fill(tempUser, $('#testForm'));
+                debug.warn(tempUser);
+                return false;
+            });
+            $('#jsonform_getJson').on('click', function () {
+                var obj = $.jsonform.getJson($('#testForm'));
+                debug.warn(obj);
+                return false;
+            });
+
+            $('#object_jsonform_submit').on('click', function () {
+                //$.jsonform.setDefaults({elementStyleName:'object'});
+                $.jsonform.fill(tempUser, $('#objectForm'), {elementStyleName: 'object'});
+                debug.warn(tempUser);
+                return false;
+            });
+            $('#object_jsonform_getJson').on('click', function () {
+                var obj = $.jsonform.getJson($('#objectForm'), {elementStyleName: 'object'});
+                debug.warn(obj);
+                return false;
+            });
+
+        });
+    </script>
+    <title></title>
+</head>
+<body>
+<div class="ui-layout-center">Center
+    <p><a href="http://layout.jquery-dev.com/demos.html">Go to the Demos page</a></p>
+
+    <p>* Pane-resizing is disabled because ui.draggable.js is not linked</p>
+
+    <p>* Pane-animation is disabled because ui.effects.js is not linked</p>
+    <button id="testButton1" title="测试按钮"></button>
+
+    <form id="testForm">
+        <input type="text" name="username" title="这是一个提示">
+        <input type="text" name="password"/>
+        <label>Gender:</label>
+        <select name="gender">
+            <option>--select--</option>
+            <option value="F">Female</option>
+            <option value="M">Male</option>
+        </select>
+        <br/>
+        <input type="radio" name="sex" value="f"> Yes
+        <input type="radio" name="sex" value="m"> No
+        <br/>
+        <input type="checkbox" name="rules[0].id" value="1"/> Admin<br/>
+        <input type="checkbox" name="rules[1].id" value="2"/> User<br/>
+        <input type="checkbox" name="rules[2].id" value="3"/> Developer
+
+
+        <input type="submit" name="submit" value="提交" id="jsonform_submit"/>
+        <input type="submit" name="submit1" value="获取" id="jsonform_getJson"/>
+    </form>
+
+    <form id="objectForm">
+        <input type="text" name="user.username"/>
+        <input type="text" name="user.password"/>
+        <label>Gender:</label>
+        <select name="user.gender">
+            <option>--select--</option>
+            <option value="F" selected="selected">Female</option>
+            <option value="M">Male</option>
+        </select>
+        <br/>
+        <input type="radio" name="user.sex" value="f"> Yes
+        <input type="radio" name="user.sex" value="m"> No
+        <br/>
+        <input type="checkbox" name="user.rules[0].id" value="1"/> Admin<br/>
+        <input type="checkbox" name="user.rules[1].id" value="2"/> User<br/>
+        <input type="checkbox" name="user.rules[2].id" value="3"/> Developer
+        <br/><br/>
+
+        <input type="submit" name="submit" value="提交" id="object_jsonform_submit"/>
+        <input type="submit" name="submit1" value="获取" id="object_jsonform_getJson"/>
+    </form>
+
+    <div id="divForm1" class="description">
+        <form id="form1">
+            <label>Nome:</label>
+            <input type="text" name="user.name"/>
+            <br/><br/>
+
+            <label>E-mail:</label>
+            <input type="text" name="user.email"/>
+            <br/><br/>
+
+            <label>Phone:</label>
+            <input type="text" name="user.phone.codeArea" size="3" maxlength="3"/>
+            <input type="text" name="user.phone.number" size="11" maxlength="10"/>
+            <br/><br/>
+
+            <label>Date:</label>
+            <input type="text" name="user.date1" id="date1"/> from string (mm/dd/yyyy, mm-dd-yyyy, yyyy-mm-dd or
+            yyyy/mm/dd)
+            <br/><br/>
+
+            <label>Date 2:</label>
+            <input type="text" name="user.date2" id="date2"/> from milliseconds
+            <br/><br/>
+
+            <label>Gender:</label>
+            <select name="user.gender">
+                <option>--select--</option>
+                <option value="F">Female</option>
+                <option value="M">Male</option>
+            </select>
+            <br/><br/>
+
+            <label>Is Administrator?</label>
+            <!--input type="checkbox" name="user.admin" value="Y" -->
+
+            <input type="radio" name="user.admin" value="Y"> Yes
+            <input type="radio" name="user.admin" value="N"> No
+            <br/><br/>
+
+            <label>Rules:</label>
+
+            <input type="checkbox" name="user.rules[0].id" value="1"/> Admin<br/>
+            <input type="checkbox" name="user.rules[1].id" value="2"/> User<br/>
+            <input type="checkbox" name="user.rules[2].id" value="3"/> Developer
+            <br/><br/>
+
+            <input type="button" id="btnExample1" value="Fill"/>
+            <input type="reset" value="Reset"/>
+        </form>
+
+    </div>
+    <ul id="testresult">
+
+    </ul>
+</div>
+<div class="ui-layout-north">North</div>
+<div class="ui-layout-south">South</div>
+<div class="ui-layout-east">
+
+</div>
+<div class="ui-layout-west">West
+    Html代码
+
+    <!-- Html代码 -->
+    <div id="accordion" class="ui-widget-content" style="height: 80%;">
+        <h6><a href="#">用户管理</a></h6>
+        <div>...</div>
+        <h6><a href="#">商品管理</a></h6>
+        <div>...</div>
+        <h6><a href="#">订单管理</a></h6>
+
+        <div>            　　
+            <ul id="menu_ul">                　　
+                <li class="ui-state-disabled"><a href="#">订单管理</a></li>
+                <li><a href="#">收货地址管理</a></li>
+                <li><a href="#">退货管理</a></li>
+            </ul>
+        </div>
+        <h6><a href="#">统计</a></h6>
+
+        <div>...</div>
+    </div>
+</div>
+</body>
+</html>
